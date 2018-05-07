@@ -16,9 +16,14 @@ def replace_tag_for_document(id, api_key, url, currentTag, replacementTag):
         return
 
     if 'tags' in item:
+        updatedTags = []
         for tag in item['tags']:
+            updatedTag = {'resource': 'tags', 'name': tag['name']}
             if tag['name'] == currentTag:
-                tag['name'] = replacementTag
+                updatedTag['name'] = replacementTag
+            if tag['name'] != currentTag or replacementTag != '':
+                updatedTags.append(replacementTag)
+        item['tags'] = updatedTags
 
     print('tags:', json.dumps(item['tags'], sort_keys=True, indent=4))
     req = requests.put(url + 'items/' + str(id) + '?key=' + api_key, json=item)
@@ -31,7 +36,10 @@ if __name__ == "__main__":
     parser.add_argument('url', help='Base URL for the Omeka instance')
     parser.add_argument('key', help='API key for the Omeka instance')
     parser.add_argument('currentTag', help='Name of tag to replace')
-    parser.add_argument('replacementTag', help='Name of replacement tag')
+    parser.add_argument('-r', '--replacementTag',
+                        help='Name of replacement tag',
+                        type=str,
+                        default='')
     parser.add_argument('-s', '--start',
                         help='Document ID where tagging should begin',
                         type=int, default=0)
