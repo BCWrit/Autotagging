@@ -18,11 +18,14 @@ def replace_tag_for_document(id, api_key, url, currentTag, replacementTag):
     if 'tags' in item:
         updatedTags = []
         for tag in item['tags']:
-            updatedTag = {'resource': 'tags', 'name': tag['name']}
+            originalTagName = tag['name']
+            updatedTag = tag
             if tag['name'] == currentTag:
                 updatedTag['name'] = replacementTag
-            if tag['name'] != currentTag or replacementTag != '':
-                updatedTags.append(replacementTag)
+                del updatedTag['id']
+                del updatedTag['url']
+            if originalTagName != currentTag or replacementTag != '':
+                updatedTags.append(updatedTag)
         item['tags'] = updatedTags
 
     print('tags:', json.dumps(item['tags'], sort_keys=True, indent=4))
