@@ -51,6 +51,8 @@ def tag_document(id, api_key, url, label_mapping,
         print('Record with id ' + str(id) + ' could not be found.')
         return
 
+    # print("item: ", json.dumps(item, sort_keys=True, indent=4))
+
     if 'element_texts' in item:
         element_texts = item['element_texts']
         texts = [i['text'] for i in element_texts
@@ -94,6 +96,10 @@ if __name__ == "__main__":
         get_labeled_entities = get_labeled_entities_nltk
     else:
         get_labeled_entities = get_labeled_entities_spacy
+
+    # print("args.tag_engine: ", args.tag_engine)
+    # print()
+    # print("====")
 
     label_mapping = {
         'PERSON': 'Person',
