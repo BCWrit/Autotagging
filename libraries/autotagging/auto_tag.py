@@ -49,8 +49,8 @@ def tag_document(id, api_key, url, label_mapping,
     item = req.json()
     if 'message' in item and item['message'].endswith('Record not found.'):
         print('Record with id ' + str(id) + ' could not be found.')
-        return
-
+#        return
+# bcr: test for error handling if record doesn't exist
     # print("item: ", json.dumps(item, sort_keys=True, indent=4))
 
     if 'element_texts' in item:
@@ -113,6 +113,14 @@ if __name__ == "__main__":
         'LAW': 'Law'
     }
     for i in range(args.start, args.end):
-        tag_document(i, args.key, args.url, label_mapping,
-                     max_length=args.max_length or 50000,
-                     get_labeled_entities=get_labeled_entities)
+        try:
+            tag_document(i, args.key, args.url, label_mapping,
+                         max_length=args.max_length or 50000,
+                         get_labeled_entities=get_labeled_entities)
+        except OSError:
+            continue
+
+#    for i in range(args.start, args.end):
+#        tag_document(i, args.key, args.url, label_mapping,
+#                     max_length=args.max_length or 50000,
+#                     get_labeled_entities=get_labeled_entities)
